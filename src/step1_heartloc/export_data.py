@@ -6,7 +6,7 @@
   ----------------------------------------
   Author: AIM Harvard
   
-  Python Version: 2.7.17
+  Python Version: 3.8
   ----------------------------------------
   
 
@@ -183,14 +183,14 @@ def check_img(patient_id, img_sitk, curated_size, curated_spacing):
   
   # check size
   if not img_sitk.GetSize()[0] == curated_size[0] or not img_sitk.GetSize()[1] == curated_size[1]:
-    print 'Error, wrong image size', patient_id, img_sitk.GetSize(), img_sitk.GetSize()
+    print('Error, wrong image size', patient_id, img_sitk.GetSize(), img_sitk.GetSize())
     return False
 
   # check spacing
   if(not round(img_sitk.GetSpacing()[0], 2) == curated_spacing[0] or
      not round(img_sitk.GetSpacing()[1], 2) == curated_spacing[1] or
      not round(img_sitk.GetSpacing()[2], 2) == curated_spacing[2]):
-    print 'Error, wrong image spacing', patient_id, np.round(img_sitk.GetSpacing(), 2)
+    print('Error, wrong image spacing', patient_id, np.round(img_sitk.GetSpacing(), 2))
     return False
 
   return True
@@ -215,14 +215,14 @@ def check_mask(patient_id, img_sitk, msk_sitk):
   if(not img_sitk.GetSize()[0] == msk_sitk.GetSize()[0] or
      not img_sitk.GetSize()[1] == msk_sitk.GetSize()[1] or
      not img_sitk.GetSize()[2] == msk_sitk.GetSize()[2]):
-    print 'Error, wrong mask size', patient_id, img_sitk.GetSize(), msk_sitk.GetSize()
+    print('Error, wrong mask size', patient_id, img_sitk.GetSize(), msk_sitk.GetSize())
     return False
 
   # check spacing
   if(not round(img_sitk.GetSpacing()[0], 2) == round(msk_sitk.GetSpacing()[0], 2) or
      not round(img_sitk.GetSpacing()[1], 2) == round(msk_sitk.GetSpacing()[1], 2) or
      not round(img_sitk.GetSpacing()[2], 2) == round(msk_sitk.GetSpacing()[2], 2)):
-    print 'Error, wrong mask spacing', patient_id, np.round(img_sitk.GetSpacing(), 2), np.round(msk_sitk.GetSpacing(), 2)
+    print('Error, wrong mask spacing', patient_id, np.round(img_sitk.GetSpacing(), 2), np.round(msk_sitk.GetSpacing(), 2))
     return False
   return True
 
@@ -314,7 +314,7 @@ def run_core(curated_dir_path, qc_curated_dir_path, export_png,
 
   """
 
-  print 'Processing patient', patient_id
+  print('Processing patient', patient_id)
   
   # init SITK reader and writer, load the CT volume in a SITK object
   nrrd_reader = sitk.ImageFileReader()
@@ -415,8 +415,8 @@ def export_data(raw_data_dir_path, curated_dir_path, qc_curated_dir_path,
     msk_file = os.path.join(patient_dir, 'msk.nrrd')
     patients_data[patient_id] = [img_file, msk_file]
   
-  print "Data preprocessing:"
-  print 'Found', len(patients_data), 'patients under "%s"'%(raw_data_dir_path)
+  print("Data preprocessing:")
+  print('Found', len(patients_data), 'patients under "%s"'%(raw_data_dir_path))
 
   # if single core, then run core as one would normally do with a function
   if num_cores == 1:
@@ -435,8 +435,8 @@ def export_data(raw_data_dir_path, curated_dir_path, qc_curated_dir_path,
   elif num_cores > 0:
     pool = Pool(processes = num_cores)
     pool.map(partial(run_core, curated_dir_path, qc_curated_dir_path, export_png, has_manual_seg, curated_size, curated_spacing,
-                     patients_data), patients_data.keys())
+                     patients_data), list(patients_data.keys()))
     pool.close()
     pool.join()
   else:
-    print 'Wrong number of CPU cores specified in the config file.'
+    print('Wrong number of CPU cores specified in the config file.')

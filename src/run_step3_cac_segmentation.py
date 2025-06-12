@@ -5,7 +5,7 @@
   ----------------------------------------
   Author: AIM Harvard
   
-  Python Version: 2.7.17
+  Python Version: 3.8
   ----------------------------------------
   
   Deep-learning-based CAC segmentation in
@@ -82,7 +82,7 @@ else:
   
   # signal the user if "use_inferred_masks" if run is forced to "Test"
   if not use_inferred_masks:
-    print "Manual segmentation masks not provided. Forcing localization with the inferred masks."
+    print("Manual segmentation masks not provided. Forcing localization with the inferred masks.")
   
   # if manual segmentation masks are not available, force "use_inferred_masks" to True
   run = "Test"
@@ -131,7 +131,7 @@ if not os.path.exists(model_output_dir_path): os.mkdir(model_output_dir_path)
 ## ----------------------------------------
 
 # run the CAC segmentation pipeline
-print "\n--- STEP 3 - CAC SEGMENTATION ---\n"
+print("\n--- STEP 3 - CAC SEGMENTATION ---\n")
 
 # 
 dilate_segmasks.dilate_segmasks(pred_dir = step2_inferred_dir_path,
