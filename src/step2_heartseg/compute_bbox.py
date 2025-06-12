@@ -5,7 +5,7 @@
   ----------------------------------------
   Author: AIM Harvard
   
-  Python Version: 2.7.17
+  Python Version: 3.8
   ----------------------------------------
   
 """
@@ -45,7 +45,7 @@ def get_files_for_patient(patients_dict, pred_dir, img_file, has_manual_seg, run
     if os.path.exists(raw_msk_file):
       patient['rawMsk'] = raw_msk_file
     else:
-      print 'No mask file found for patient', patient_id
+      print('No mask file found for patient', patient_id)
       return
 
   if run == 'Test':
@@ -53,7 +53,7 @@ def get_files_for_patient(patients_dict, pred_dir, img_file, has_manual_seg, run
     if os.path.exists(prd_msk_file):
       patient['prdMsk'] = prd_msk_file
     else:
-      print 'No pred file found for patient', patient_id
+      print('No pred file found for patient', patient_id)
       return
 
   patients_dict[patient_id] = patient
@@ -102,7 +102,7 @@ def get_bb_center(patient_id, cube):
     msk_ones = np.where(cube == 1)
     
     if len(msk_ones[0]) == 0:
-      print 'ERROR orig:', patient_id
+      print('ERROR orig:', patient_id)
       return
       
     msk_bb = [np.min(msk_ones[0]), np.max(msk_ones[0]), np.min(msk_ones[1]), np.max(msk_ones[1]),
@@ -130,7 +130,7 @@ def run_core(patients, result_dict, patient_id):
   
   patient = patients[patient_id]
 
-  if 'rawMsk' in patient.keys():
+  if 'rawMsk' in list(patient.keys()):
     # get true mask, bbox and center of bbox
     up_orig_msk_cube = get_msk_cube(patient['rawMsk'])    
     if up_orig_msk_cube.size == 0:
@@ -139,15 +139,15 @@ def run_core(patients, result_dict, patient_id):
                                                                     cube = up_orig_msk_cube)
     patient['size'] = up_orig_msk_cube.shape
 
-  if 'prdMsk' in patient.keys():
+  if 'prdMsk' in list(patient.keys()):
     # get pred mask, bbox and center of bbox
     up_pred_msk_cube = get_msk_cube(patient['prdMsk'])
     patient['upPredMskBB'], patient['upPredMskCen'] = get_bb_center(patient_id = patient_id,
                                                                     cube = up_pred_msk_cube)
-    if 'size' not in patient.keys():
+    if 'size' not in list(patient.keys()):
       patient['size'] = up_pred_msk_cube.shape
 
-  if 'upOrigMskCen' in patient.keys() and 'upPredMskCen' in patient.keys():
+  if 'upOrigMskCen' in list(patient.keys()) and 'upPredMskCen' in list(patient.keys()):
     # compute the distance of bbox centers
     patient['distCEN'] = distance.euclidean(patient['upOrigMskCen'], patient['upPredMskCen'])
 
@@ -171,11 +171,11 @@ def compute_bbox(cur_dir, pred_dir, output_dir, num_cores, has_manual_seg, run):
     
   """
   
-  print "Bounding box calculation:"
+  print("Bounding box calculation:")
   
   img_files = glob(cur_dir + '/*_img.nrrd')
   
-  print 'Found', len(img_files), 'images under "%s"'%(cur_dir)
+  print('Found', len(img_files), 'images under "%s"'%(cur_dir))
 
   patients_dict = dict()
   for img_file in img_files:
@@ -185,7 +185,7 @@ def compute_bbox(cur_dir, pred_dir, output_dir, num_cores, has_manual_seg, run):
                           has_manual_seg = has_manual_seg,
                           run = run)
   
-  print 'Loading the masks inferred on step1 for', len(patients_dict), 'patients under "%s"'%(pred_dir)
+  print('Loading the masks inferred on step1 for', len(patients_dict), 'patients under "%s"'%(pred_dir))
 
   if num_cores == 1:
     result_dict = dict()
@@ -199,12 +199,12 @@ def compute_bbox(cur_dir, pred_dir, output_dir, num_cores, has_manual_seg, run):
     with Manager() as manager:
       result_dict = manager.dict()
       pool = multiprocessing.Pool(processes = num_cores)
-      pool.map(partial(run_core, patients_dict, result_dict), patients_dict.keys())
+      pool.map(partial(run_core, patients_dict, result_dict), list(patients_dict.keys()))
       pool.close()
       pool.join()
       result_dict = dict(result_dict)
   else:
-    print 'Wrong core number set in config file'
+    print('Wrong core number set in config file')
     sys.exit()
 
   results_file_name = os.path.join(output_dir, 'bbox.pkl')

@@ -5,7 +5,7 @@
   ----------------------------------------
   Author: AIM Harvard
   
-  Python Version: 2.7.17
+  Python Version: 3.8
   ----------------------------------------
   
 """
@@ -126,12 +126,12 @@ def export_png(patient_id, img, msk, prd, th, output_dir_png):
 
 def test(model, patient_data, cube_size, output_dir_npy, output_dir_png, th, export_cac_slices_png):
   patient_id = patient_data[0]
-  print "Processing patient", patient_id
+  print("Processing patient", patient_id)
   img = patient_data[1]
   msk = patient_data[2]
 
   if img.shape[0] < cube_size[2] or img.shape[1] < cube_size[1] or img.shape[2] < cube_size[0]:
-    print('Skipping patient', patient_id)
+    print(('Skipping patient', patient_id))
     return
 
   imgCubes, mskCubes, n_x, n_y, n_z = getCubes(img, msk, cube_size)
@@ -157,7 +157,7 @@ def test(model, patient_data, cube_size, output_dir_npy, output_dir_png, th, exp
 def run_inference(data_dir, model_weights_dir_path, weights_file_name,
                   output_dir, export_cac_slices_png, has_manual_seg):
   
-  print "\nDeep Learning model inference using 4xGPUs:" 
+  print("\nDeep Learning model inference using 4xGPUs:") 
   
   # hard-coded model parameters
   th = 0.9
@@ -200,9 +200,9 @@ def run_inference(data_dir, model_weights_dir_path, weights_file_name,
   weights_file = os.path.join(model_weights_dir_path, weights_file_name)
 
   test_data = load_test_data(data_dir, mask = has_manual_seg)
-  print 'Found', len(test_data), 'patients under "%s"'%(data_dir)
+  print('Found', len(test_data), 'patients under "%s"'%(data_dir))
 
-  print 'Loading saved model from "%s"'%(weights_file)
+  print('Loading saved model from "%s"'%(weights_file))
   
   model = cacseg_model.getUnet3d(down_steps = down_steps, input_shape = input_shape, pool_size = pool_size,
                                  conv_size = conv_size, initial_learning_rate = lr, mgpu = mgpu,
