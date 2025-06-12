@@ -5,7 +5,7 @@
   ----------------------------------------
   Author: AIM Harvard
   
-  Python Version: 2.7.17
+  Python Version: 3.8
   ----------------------------------------
   
 """
@@ -55,7 +55,7 @@ def getUnet3d(down_steps, input_shape, pool_size, conv_size, initial_learning_ra
     return getUnet3d_4_MGPU(input_shape, pool_size=pool_size, conv_size=conv_size,
                             initial_learning_rate=initial_learning_rate, mgpu=mgpu)
   else:
-    print 'Wrong U-Net parameters specified ("down_steps")'
+    print('Wrong U-Net parameters specified ("down_steps")')
 
 ## ----------------------------------------
 ## ----------------------------------------

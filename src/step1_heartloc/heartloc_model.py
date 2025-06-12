@@ -5,7 +5,7 @@
   ----------------------------------------
   Author: AIM Harvard
   
-  Python Version: 2.7.17
+  Python Version: 3.8
   ----------------------------------------
   
 """
@@ -102,18 +102,18 @@ def get_unet_3d_4(input_shape, pool_size, conv_size, initial_learning_rate, mgpu
   act = Activation('sigmoid', name='act')(conv10)
 
   if mgpu == 1:
-    print 'Compiling single GPU model...'
+    print('Compiling single GPU model...')
     model = Model(inputs=inputs, outputs=act)
     model.compile(optimizer=Adam(lr=initial_learning_rate), loss=dice_coef_loss,
                   metrics=[dice_coef])
     return model
   elif mgpu > 1:
-    print 'Compiling multi GPU model...'
+    print('Compiling multi GPU model...')
     model = Model(inputs=inputs, outputs=act)
     parallel_model = multi_gpu_model(model, gpus=mgpu)
     parallel_model.compile(optimizer=Adam(lr=initial_learning_rate), loss=dice_coef_loss,
                            metrics=[dice_coef])
     return parallel_model
   else:
-    print 'ERROR Wrong number of GPUs defined'
+    print('ERROR Wrong number of GPUs defined')
     return

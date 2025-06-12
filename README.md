@@ -26,26 +26,20 @@ Additional details on the content of the subdirectories and their structure can 
 
 ## Setup
 
-This code was developed and tested using Python 2.7.17 on Ubuntu 18.04 with Cuda 10.1 and libcudnn 7.6.
+This code was developed and tested using **Python 3.8** on Ubuntu 18.04 with Cuda 10.1 and libcudnn 7.6.
 
-For the code to run as intended, all the packages under `requirements.txt` should be installed. In order not to break previous installations and ensure full compatibility, it's highly recommended to create a virtual environment to run the DeepCAC pipeline in. Here follows an example of set-up using `python virtualenv`:
+For the code to run as intended, all the packages under `requirements.txt` should be installed. In order not to break previous installations and ensure full compatibility, it's highly recommended to create a virtual environment to run the DeepCAC pipeline in. Here follows an example of set-up using `python3 -m venv`:
 
 ```
-# install python's virtualenv
-sudo pip install virtualenv
-
-# parse the path to the python2 interpreter
-export PY2PATH=$(which python2)
-
-# create a virtualenv with such python2 interpreter named "venv"
+# create a virtual environment named "venv"
 # (common name, already found in .gitignore)
-virtualenv -p $PY2PATH venv 
+python3 -m venv venv
 
 # activate the virtualenv
 source venv/bin/activate
 ```
 
-At this point, `(venv)` should be displayed at the start of each bash line. Furthermore, the command `which python2` should return a path similar to `/path/to/folder/venv/bin/python2`. Once the virtual environment is activated:
+At this point, `(venv)` should be displayed at the start of each bash line. Furthermore, the command `which python3` should return a path similar to `/path/to/folder/venv/bin/python3`. Once the virtual environment is activated:
 
 ```
 # once the virtualenv is activated, install the dependencies
